@@ -1,12 +1,13 @@
 {
     "id": "jrrp",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "name": "Jrrp",
     "description": "《今日人品》",
     "author": [
-        "Huaji_MUR233"
+        "Huaji_MUR233",
+        "Polaris_Light"
     ],
-    "link": "https://github.com/HuajiMURsMC/jrrp",
+    "link": "https://github.com/FDCraft/jrrp",
     "dependencies": {
         "mcdreforged": ">=2.1.4",
         "mc_uuid": ">=1.0.0"

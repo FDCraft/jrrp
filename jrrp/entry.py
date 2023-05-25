@@ -1,8 +1,7 @@
-from datetime import datetime
-import os.path
+import os
 
-from mcdreforged.api.types import PluginServerInterface, PlayerCommandSource
-from mcdreforged.api.command import Literal
+from datetime import datetime
+from mcdreforged.api.all import *
 
 from .config import JrrpConfig
 
@@ -15,9 +14,12 @@ def get_jrrp(string: str):
 
 
 def register_jrrp_command(server: PluginServerInterface):
+
+
     def reply_jrrp(src: PlayerCommandSource):
         uuid = mc_uuid.onlineUUID(src.player).hex if config.online_mode else mc_uuid.offlineUUID(src.player).hex
         jrrp = get_jrrp(uuid)
+
         for msg_obj in config.message:
             if eval(msg_obj["expr"]):
                 start = msg_obj.get("start") if msg_obj.get("start") else config.start
@@ -25,19 +27,16 @@ def register_jrrp_command(server: PluginServerInterface):
                 title = msg_obj.get("title") if msg_obj.get("title") else config.title
                 msg = start + str(jrrp) + end
                 if title:
-                    src.get_server().execute("title {} {}".format(src.player, msg))
+                    src.get_server().execute('title {} title \"{}\"'.format(src.player, msg))
                 src.reply(msg)
+                break
 
-    config = server.load_config_simple(os.path.join("config", "jrrp.json"),
-                                       in_data_folder=False,
-                                       target_class=JrrpConfig)
+
+    config = server.load_config_simple(os.path.join("config", "jrrp.json"), in_data_folder=False, target_class=JrrpConfig)
     mc_uuid = server.get_plugin_instance("mc_uuid")
     for command in config.command:
-        server.register_command(
-            Literal(command)
-            .requires(lambda src: src.is_player)
-            .runs(reply_jrrp)
-        )
+        server.register_help_message(command, '获取今日人品！')
+        server.register_command(Literal(command).requires(lambda src: src.is_player).runs(reply_jrrp))
 
 
 def on_load(server: PluginServerInterface, old):
